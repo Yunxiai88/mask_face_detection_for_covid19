@@ -1,0 +1,6 @@
+.DS_Store
+yolov4/data/.DS_Store
+yolov4/python/__pycache__
+webApp/models/util/__pycache__
+webApp/models/__pycache__
+
