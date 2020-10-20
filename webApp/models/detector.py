@@ -1,77 +1,59 @@
 import cv2
+import time
 import numpy as np
-from tensorflow.keras.preprocessing.image import img_to_array
-from sklearn.preprocessing import Normalizer
-from scipy.spatial.distance import cosine
-from models.facenet import FaceNet
-from threading import Timer
-import os
-from models.util import utils
 import tensorflow as tf
 
-print("Using gpu: {0}".format(tf.test.is_gpu_available(cuda_only=False,min_cuda_compute_capability=None)))
-# initial values
-CONFIDENCE=0.5
-THRESHOLD=0.3
+from models.facenet import FaceNet
+from models.util import utils
 
-# set parameter
-probability_minimum = 0.5
-threshold = 0.3
-min_dist = 1
+
+print("Using gpu: {0}".format(tf.test.is_gpu_available(cuda_only=False,
+                             min_cuda_compute_capability=None)))
 
 class MaskDetector:
     def __init__(self):
         self.facenet = FaceNet()
+        self.CONFIDENCE       = 0.5
+        self.THRESHOLD        = 0.3
+        self.LABELS           = self.init_label()
+        self.COLORS           = self.init_color()
+        self.net              = self.init_weight()
 
+    # initial labels
+    def init_label(self):
+        print("initial yolo label...")
+        labelsPath = utils.get_file_path("webApp/cfg", "classes.names")
+        return open(labelsPath).read().strip().split("\n")
 
-    # def triplet_loss(y_true, y_pred, alpha = 0.2):
-    #     anchor, positive, negative = y_pred[0], y_pred[1], y_pred[2]
+    # initial colors
+    def init_color(self):
+        print("initial yolo colors...")
+        np.random.seed(42)
+        return np.random.randint(0, 255, size=(len(self.LABELS), 3), dtype="uint8")
 
-    #     # Step 1: Compute the (encoding) distance between the anchor and the positive
-    #     pos_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, positive)), axis=-1)
-    #     # Step 2: Compute the (encoding) distance between the anchor and the negative
-    #     neg_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, negative)), axis=-1)
-    #     # Step 3: subtract the two previous distances and add alpha.
-    #     basic_loss = tf.add(tf.subtract(pos_dist, neg_dist), alpha)
-    #     # Step 4: Take the maximum of basic_loss and 0.0. Sum over the training examples.
-    #     loss = tf.reduce_sum(tf.maximum(basic_loss, 0.0))
+    def init_weight(self):
+        print("[INFO] loading YOLO from disk...")
+        # derive the paths to the YOLO weights and model configuration
+        weightsPath = utils.get_file_path("webApp/data", "yolov4.weights")
+        configPath = utils.get_file_path("webApp/cfg", "yolov4.cfg")
+        return cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
-    #     return loss
-
-    # #get face embedding and perform face recognition
-    # def get_embedding(image,model_Face):
-    #     # scale pixel values
-    #     face = image.astype('float32')
-    #     # standardization
-    #     mean, std = face.mean(), face.std()
-    #     face = (face - mean) / std
-    #     face = cv2.resize(face,(160,160))
-    #     face = np.expand_dims(face, axis=0)
-    #     encode = model_Face.predict(face)[0]
-    #     return encode
-
-    # def find_person(encoding,database):
-    #     min_dist = float("inf")
-    #     encoding = in_encoder.transform(np.expand_dims(encoding, axis=0))[0]
-    #     for (name, db_enc) in database.items():
-    #         dist = cosine(db_enc,encoding)
-    #         if dist < 0.5 and dist < min_dist:
-    #             min_dist = dist
-    #             identity = name
-
-    #     if min_dist > 0.5:
-    #         return "None"
-    #     else:
-    #         return identity
-    #     return "None"
-
-    def detect(self, frame, net, ln, LABELS, COLORS, W, H):
+    def detect(self, frame, W, H):
         # construct a blob from the input frame and then perform a forward
         # pass of the YOLO object detector, giving us our bounding boxes
         # and associated probabilities
         blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
-        net.setInput(blob)
-        layerOutputs = net.forward(ln)
+        self.net.setInput(blob)
+
+        ln = self.net.getLayerNames()
+        ln = [ln[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+
+        # calculate execute time
+        start = time.time()
+        layerOutputs = self.net.forward(ln)
+        end = time.time()
+
+        print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
         # initialize our lists of detected bounding boxes, confidences,
         # and class IDs, respectively
@@ -82,10 +64,10 @@ class MaskDetector:
         #faces_list = []
         #encodes = []
         names = []
-                
+
         # def hello():
         #     print("Hello")
-        # t = Timer(5.0, hello) 
+        # t = Timer(5.0, hello)
         # t.start()
         # loop over each of the layer outputs
         for output in layerOutputs:
@@ -98,7 +80,7 @@ class MaskDetector:
 
                 # filter out weak predictions by ensuring the detected
                 # probability is greater than the minimum probability
-                if confidence > CONFIDENCE:
+                if confidence > self.CONFIDENCE:
                     # scale the bounding box coordinates back relative to
                     # the size of the image
                     box = detection[0:4] * np.array([W, H, W, H])
@@ -128,7 +110,7 @@ class MaskDetector:
                         print(label)
 
         # apply non-maximal suppression to suppress weak, overlapping bounding boxes
-        idxs = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)
+        idxs = cv2.dnn.NMSBoxes(boxes, confidences, self.CONFIDENCE, self.THRESHOLD)
 
         # ensure at least one detection exists
         if len(idxs) > 0:
@@ -139,8 +121,7 @@ class MaskDetector:
                 (w, h) = (boxes[i][2], boxes[i][3])
 
                 # draw a bounding box rectangle and label on the frame
-                color = [int(c) for c in COLORS[classIDs[i]]]
+                color = [int(c) for c in self.COLORS[classIDs[i]]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-                text = "{}: {:.4f}".format(LABELS[classIDs[i]]+":"+names[i], confidences[i])
-                cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1.5, color, 10)
-                
+                text = "{}: {:.4f}".format(self.LABELS[classIDs[i]]+":"+names[i], confidences[i])
+                cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1.5, color, 8)

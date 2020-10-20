@@ -11,14 +11,8 @@ from models.realStream import RealStream
 from models.facenet import FaceNet
 from models.util import utils
 
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-TEMPLATES_AUTO_RELOAD = True
-
 # initialize a flask object
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
 def index():
@@ -143,7 +137,7 @@ def video_feed():
 
 @app.route("/download/<fileName>", methods=['GET'])
 def download(fileName):
-    file = os.path.join(UPLOAD_FOLDER, fileName)
+    file = utils.get_file_path('webApp/uploads', fileName)
 
     response = make_response(send_file(file))
     response.headers["Content-Disposition"] = "attachment; filename={};".format(file)
@@ -175,11 +169,12 @@ def uploadImage():
         fn = FaceNet()
         username = request.form['username']
         (status, message) = fn.save_encode_db(username, file.filename)
+
         response = make_response({"message":message})
         response.status_code = status
         # response.mimetype = 'text/plain'
         # response.headers['x-tag'] = 'sth.magic'
-        return response                      
+        return response
 
 # execute function
 if __name__ == '__main__':
