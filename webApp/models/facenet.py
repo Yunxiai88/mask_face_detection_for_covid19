@@ -65,7 +65,7 @@ class FaceNet:
 
     # get face embedding and perform face recognition
     def get_embedding(self, image):
-        print("get enbedding code function begin...")
+        #print("get enbedding code function begin...")
         # scale pixel values
         face = image.astype('float32')
         # standardization
@@ -77,7 +77,7 @@ class FaceNet:
         return encode
 
     def find_person(self, encoding, min_dist=1):
-        print("find person function begin...")
+        #print("find person function begin...")
         min_dist = float("inf")
         encoding = in_encoder.transform(np.expand_dims(encoding, axis=0))[0]
         for (name, db_enc) in self.database.items():

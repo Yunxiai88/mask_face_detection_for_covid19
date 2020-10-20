@@ -1,5 +1,4 @@
 import cv2
-import time
 import numpy as np
 import tensorflow as tf
 
@@ -49,11 +48,11 @@ class MaskDetector:
         ln = [ln[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
         # calculate execute time
-        start = time.time()
+        #start = time.time()
         layerOutputs = self.net.forward(ln)
-        end = time.time()
+        #end = time.time()
 
-        print("[INFO] YOLO took {:.6f} seconds".format(end - start))
+        #print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
         # initialize our lists of detected bounding boxes, confidences,
         # and class IDs, respectively
@@ -102,12 +101,17 @@ class MaskDetector:
                         #convert to greyscale
                         #faces_list=[]
                         #encodes=[]
-                        label = ""
                         label = self.facenet.recognize(frame, x, y, width, height)
 
                         classIDs.append(classID)
                         names.append(label)
                         print(label)
+
+                        if label != 'Not found':
+                            break
+            else:
+                continue
+            break
 
         # apply non-maximal suppression to suppress weak, overlapping bounding boxes
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, self.CONFIDENCE, self.THRESHOLD)
@@ -123,5 +127,5 @@ class MaskDetector:
                 # draw a bounding box rectangle and label on the frame
                 color = [int(c) for c in self.COLORS[classIDs[i]]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-                text = "{}: {:.4f}".format(self.LABELS[classIDs[i]]+":"+names[i], confidences[i])
+                text = "{}:{:.4f}".format(self.LABELS[classIDs[i]]+":"+names[i], confidences[i])
                 cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1.5, color, 8)
