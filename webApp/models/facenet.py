@@ -142,7 +142,8 @@ class FaceNet:
 
         # save detected face image to allow user download
         basename = os.path.splitext(os.path.basename(filename))[0]
-        outputfile = basename+"_face.jpg"
+        extention = os.path.splitext(os.path.basename(filename))[1]
+        outputfile = basename+"_face"+extention
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), img)
 
@@ -189,10 +190,10 @@ class FaceNet:
 
         try:
              # extract face using facenet
-            face_frame = self.extract_face(imagePath)
+            # face_frame = self.extract_face(imagePath)
 
              # extract face using mtcnn
-            # face_frame = self.extract_mtcnn_face(imagePath)
+            face_frame = self.extract_mtcnn_face(imagePath)
 
             # get enbedding code
             self.database[label] = self.get_embedding(face_frame)

@@ -132,3 +132,8 @@ margin-right: auto
   .sidenav a:hover {
     color: #064579;
   }
+
+  .text-success {
+      font-size: 12px;
+      color: #419027;
+  }

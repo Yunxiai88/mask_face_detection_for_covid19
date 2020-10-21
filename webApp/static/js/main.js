@@ -27,7 +27,7 @@
                 dropZoneTitle: 'Drag file here！',
             });
 
-            // image encoding upload button
+            // Face Encoding upload button
             $(".btn-upload-3").on("click", function() {
                 var username = $("#username").val();
                 if(!username) {
@@ -42,7 +42,7 @@
                 $("#uploadImage").fileinput('upload');
             });
 
-            // image encoding clear button
+            // Face Encoding clear button
             $(".btn-reset-3").on("click", function() {
                 $("#username").val('');
                 $("#uploadImage").fileinput('clear');

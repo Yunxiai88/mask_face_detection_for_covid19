@@ -17,6 +17,12 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     # return the rendered template
+    global t
+    try:
+        t.running = False
+        t.join()
+    except Exception:
+        print("realtime thread is not running")
     return render_template("index.html")
 
 @app.route("/realstream/")
@@ -58,18 +64,6 @@ def imageprocess():
 
     return render_template("imageprocess.html")
 
-@app.route("/folderscan/")
-def folderscan():
-    # stop the detection thread
-    global t
-    try:
-        t.running = False
-        t.join()
-    except Exception:
-        print("realtime thread is not running")
-
-    # forward to static stream page
-    return render_template("folderscan.html")
 
 @app.route("/about/")
 def about():
