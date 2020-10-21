@@ -46,7 +46,7 @@ def staticstream():
         t.running = False
         t.join()
     except Exception:
-        print("staticstream thread is not running")
+        print("realtime thread is not running")
 
     # forward to static stream page
     return render_template("staticStream.html")
@@ -59,7 +59,7 @@ def imageprocess():
         t.running = False
         t.join()
     except Exception:
-        print("imageprocess thread is not running")
+        print("realtime thread is not running")
 
     return render_template("imageprocess.html")
 
@@ -71,7 +71,7 @@ def about():
         t.running = False
         t.join()
     except Exception:
-        print("about thread is not running")
+        print("realtime thread is not running")
 
     # forward to about page
     return render_template("about.html")
@@ -84,7 +84,7 @@ def contact():
         t.running = False
         t.join()
     except Exception:
-        print("contact thread is not running")
+        print("realtime thread is not running")
 
     # forward to contact page
     return render_template("contact.html")
@@ -97,7 +97,7 @@ def register():
         t.running = False
         t.join()
     except Exception:
-        print("register thread is not running")
+        print("realtime thread is not running")
 
     # forward to register page
     return render_template("register.html")
@@ -146,7 +146,7 @@ def video_feed():
 
 @app.route("/download/<fileName>", methods=['GET'])
 def download(fileName):
-    file = utils.get_file_path('uploads', fileName)
+    file = utils.get_file_path('webApp/static/processed', fileName)
 
     response = make_response(send_file(file))
     response.headers["Content-Disposition"] = "attachment; filename={};".format(file)

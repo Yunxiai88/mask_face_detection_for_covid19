@@ -99,6 +99,18 @@
                 }
               });
 
+            //show proceesed image
+          $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){
+            if ($('.progress-bar-success').length>0 && $('.progress-bar-success')[0].outerText =="Done") {
+                var fileName = $('.file-preview-image')[0].title
+                var arr = fileName.split('.')
+                arr[0]=arr[0]+"_processed"
+                var processedFileName = arr.join('.')
+                $("#uploadMedia_processed").attr("src","/static/processed/"+processedFileName)
+                $("#processresultdiv").show();
+            }
+          });
+
         }
     }
 
