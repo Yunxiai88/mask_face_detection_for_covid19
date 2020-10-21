@@ -105,13 +105,7 @@ class MaskDetector:
 
                         classIDs.append(classID)
                         names.append(label)
-                        print(label)
-
-                        if label != 'Not found':
-                            break
-            else:
-                continue
-            break
+                        #print(label)
 
         # apply non-maximal suppression to suppress weak, overlapping bounding boxes
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, self.CONFIDENCE, self.THRESHOLD)
