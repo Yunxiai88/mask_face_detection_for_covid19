@@ -22,7 +22,7 @@
                     <form action="/uploadfile" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="custom-file">
-                                <input id="uploadFile" name="uploadFile" type="file" multiple >
+                                <input id="uploadFile" name="uploadFile" type="file" >
                             </div>
                         </div>
                         <div id="processresultdiv" >
@@ -30,7 +30,11 @@
                             <div class="form-group row">
                                 <label class="col-sm-3"><span>Processed Result</span></label>
                                 <div class="col col-md-3">
-                                    <img id="uploadMedia_processed" width="150px"/>
+                                    <img id="uploadImg_processed" width="150px"/>
+                                    <video controls width="250">
+                                        <source id="uploadVid_processed" type="video/mp4">
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
                                 </div>
                                 <div class="col col-md-6 text-success">Media processed successfully</div>
                                 <div class="col-sm-9">

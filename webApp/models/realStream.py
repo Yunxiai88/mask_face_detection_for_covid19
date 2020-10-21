@@ -151,7 +151,7 @@ class RealStream:
 
         # generate processed file name
         outputfilename = os.path.splitext(filename)[0] + "_processed.mp4"
-        outputfilepath = utils.get_file_path('webApp/uploads', outputfilename)
+        outputfilepath = utils.get_file_path('webApp/static/processed', outputfilename)
 
         # read from video file
         filepath = utils.get_file_path('webApp/uploads', filename)
