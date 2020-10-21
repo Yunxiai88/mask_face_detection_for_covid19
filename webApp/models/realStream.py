@@ -140,7 +140,7 @@ class RealStream:
         basename = os.path.splitext(filename)[0]
         outputfile = basename+"_processed.jpg"
 
-        cv2.imwrite(utils.get_file_path('webApp/uploads', outputfile), frame)
+        cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), frame)
         print("processed image was successfully saved")
 
         return outputfile
@@ -149,14 +149,12 @@ class RealStream:
     def processvideo(self, filename):
         print("process video for -> " + filename)
 
-        # read video file
-        filepath = utils.get_file_path('uploads', filename)
-
         # generate processed file name
         outputfilename = os.path.splitext(filename)[0] + "_processed.mp4"
-        outputfilepath = utils.get_file_path('uploads', outputfilename)
+        outputfilepath = utils.get_file_path('webApp/uploads', outputfilename)
 
         # read from video file
+        filepath = utils.get_file_path('webApp/uploads', filename)
         video = cv2.VideoCapture(filepath)
         fps = FPS().start()
 

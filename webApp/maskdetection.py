@@ -1,4 +1,3 @@
-import os
 import threading
 import argparse
 import filetype
@@ -29,12 +28,12 @@ def index():
 def realStream():
     # start a thread that will start a video stream
     global t
+    try:
+        t.running = False
+        t.join()
+    except Exception:
+        print("realtime thread is not running")
 
-    # start a thread that will perform mask detection
-    rs = RealStream()
-    t = threading.Thread(target=rs.mask_detection)
-    t.running = True
-    t.start()
     # forward to real stream page
     return render_template("realStream.html")
 
@@ -64,7 +63,6 @@ def imageprocess():
 
     return render_template("imageprocess.html")
 
-
 @app.route("/about/")
 def about():
     # stop the detection thread
@@ -91,6 +89,18 @@ def contact():
     # forward to contact page
     return render_template("contact.html")
 
+@app.route("/register/")
+def register():
+    # stop the detection thread
+    global t
+    try:
+        t.running = False
+        t.join()
+    except Exception:
+        print("realtime thread is not running")
+
+    # forward to register page
+    return render_template("register.html")
 
 #---------------------------------------------------------------------
 #----------------------------Functions--------------------------------
@@ -123,15 +133,20 @@ def uploadfile():
 
 @app.route("/video_feed")
 def video_feed():
-    # return the response generated along with the specific media
-    # type (mime type)
+    # return the response generated along with the media type (mime type)
+    global t
+
+    # start a thread that will perform mask detection
     rs = RealStream()
+    t = threading.Thread(target=rs.mask_detection)
+    t.daemon = True
+    t.start()
     return Response(rs.generate(), mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 
 @app.route("/download/<fileName>", methods=['GET'])
 def download(fileName):
-    file = utils.get_file_path('uploads', fileName)
+    file = utils.get_file_path('webApp/static/processed', fileName)
 
     response = make_response(send_file(file))
     response.headers["Content-Disposition"] = "attachment; filename={};".format(file)
