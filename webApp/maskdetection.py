@@ -146,7 +146,7 @@ def video_feed():
 
 @app.route("/download/<fileName>", methods=['GET'])
 def download(fileName):
-    file = utils.get_file_path('webApp/static/processed', fileName)
+    file = utils.get_file_path('static/processed', fileName)
 
     response = make_response(send_file(file))
     response.headers["Content-Disposition"] = "attachment; filename={};".format(file)
