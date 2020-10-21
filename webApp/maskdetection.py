@@ -83,7 +83,7 @@ def contact():
     # forward to contact page
     return render_template("contact.html")
 
-@app.route("/register/")
+@app.route("/capture/")
 def register():
     # stop the detection thread
     global t
@@ -94,7 +94,7 @@ def register():
         print("register thread is not running")
 
     # forward to register page
-    return render_template("register.html")
+    return render_template("realCapture.html")
 
 #---------------------------------------------------------------------
 #----------------------------Functions--------------------------------

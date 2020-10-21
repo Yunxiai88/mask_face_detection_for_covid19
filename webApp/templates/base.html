@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fileinput.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+
+    {% block script %}
+    {% endblock %}
 </head>
 
 <body>
@@ -43,7 +46,7 @@
                     </ul>
                     <ul class="nav navbar-nav">
                         <li class="nav-right pull-sm-right align-content-end">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/register">
                                 <span class="glyphicon glyphicon-log-in"></span> Login</a>
                         </li>
                     </ul>

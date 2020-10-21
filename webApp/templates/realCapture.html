@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/uploadstream.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidenav">
+        <a href="/staticstream">Image Encoding</a>
+        <a href="/imageprocess">Image Processing</a>
+        <a href="/capture">Real Capture</a>
+    </div>
+
+    <!-- /#sidebar-wrapper -->
+
+     <!-- Page Content -->
+    <div class="container-fluid static-box">
+        <div id="page-content-wrapper">
+            <div id="static_content">
+                <article style="border:1px solid white;width:500px;height:500px;margin:0 auto;background-color:white;">
+                    <section style="width:320px; height:240px;border:1px solid green; margin:50px auto;">
+                        <div id="videos-container" style="width:320px; height:240px;">
+                            <video id="video" width="320px" height="240px" autoplay="autoplay"></video>
+                        </div>
+                    </section>
+                    <section style="text-align:center;border:none; margin-top:20px;">
+                        <button type="button" id="openCamera" class="btn btn-primary">
+                            <i class="fa fa-camera-retro"></i> Open Camera
+                        </button>
+                        <button type="button" id="recording" class="btn btn-primary">
+                            <i class="fa fa-ban"></i> Start Recording
+                        </button>
+                        <button type="button" id="capture" class="btn btn-primary">
+                            <i class="fa fa-ban"></i> Capture
+                        </button>
+                        <button type="button" id="send" class="btn btn-primary">
+                            <i class="fa fa-upload"></i> Send
+                        </button>
+                    </section>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var m = new media({video: "#video",uploadURI:"/uploadfile",params:{}});
+
+    var openBtn = document.getElementById("openCamera");
+    var startBtn = document.getElementById("recording");
+    var captureBtn = document.getElementById("capture");
+    var sendBtn = document.getElementById("send");
+
+    openBtn.onclick = function() {
+        this.disabled = true;
+        startBtn.disabled = false;
+        m.init();
+    };
+
+    startBtn.onclick = function() {
+        if(m.recorderState==false) {
+            m.startRecorder();
+        } else if(m.recorderState==true) {
+            m.stopRecorder();
+        }
+    };
+
+    captureBtn.onclick = function() {
+        var src = m.screenshot();
+        var img = document.createElement("img");
+        img.src=src;
+        document.getElementsByTagName("body")[0].appendChild(img);
+    };
+</script>
+{% endblock %}
