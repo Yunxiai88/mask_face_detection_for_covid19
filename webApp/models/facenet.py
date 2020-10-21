@@ -4,7 +4,6 @@ import csv
 import numpy as np
 
 from PIL import Image
-from mtcnn.mtcnn import MTCNN
 
 from sklearn.preprocessing import Normalizer
 from scipy.spatial.distance import cosine
@@ -118,6 +117,7 @@ class FaceNet:
         return label
 
     # use MTCNN to detect faces and return face array
+
     def extract_mtcnn_face(self, filename, required_size=(160, 160)):
         print("extracting face from image")
         detector = MTCNN()
@@ -151,6 +151,7 @@ class FaceNet:
         return face_array
 
     # facenet to encode
+
     def extract_face(self, filename):
         image = cv2.imread(filename)
         frame = image
