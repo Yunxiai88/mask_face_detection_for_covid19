@@ -4,34 +4,11 @@ import cv2
 import threading
 import datetime
 import imutils
-import numpy as np
 
-from imutils.video import VideoStream,FPS
+from imutils.video import FPS
 from models.webcamVideoStream import WebcamVideoStream
-from models.facenet import FaceNet
 from models.detector import MaskDetector
 from models.util import utils
-
-from flask import Response
-# setup the path for YOLOv4
-
-# load the class labels our YOLO model was trained
-labelsPath = os.path.sep.join(["webApp/cfg", "classes.names"])
-LABELS = open(labelsPath).read().strip().split("\n")
-
-# initialize a list of colors to represent each possible class label
-np.random.seed(42)
-COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
-
-# derive the paths to the YOLO weights and model configuration
-weightsPath = os.path.sep.join(["webApp/data", "yolov4.weights"])
-configPath = os.path.sep.join(["webApp/cfg", "yolov4.cfg"])
-
-# load our YOLO object detector and determine only the *output* layer names
-print("[INFO] loading YOLO from disk...")
-net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
-ln = net.getLayerNames()
-ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -64,7 +41,15 @@ class RealStream:
         while getattr(th, "running", True):
             # read the next frame from the video stream
             frame = vs.read()
-            
+
+            if frame is None:
+                break
+
+            # initial width and height for frame
+            if W is None or H is None:
+                (H, W) = frame.shape[:2]
+
+            # process frame
             frame = self.processFrame(frame, W, H)
 
             # resize the frame, for output
@@ -107,11 +92,10 @@ class RealStream:
             # yield the output frame in the byte format
             yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
                 bytearray(encodedImage) + b'\r\n')
-        
 
 
     # process frame
-    def processFrame(self, frame, W, H):
+    def processFrame(self, frame, W=None, H=None):
             if W is None or H is None:
                 (H, W) = frame.shape[:2]
 
@@ -134,7 +118,7 @@ class RealStream:
             # sharpened = cv2.filter2D(greyed,-1,filter)
 
             # call function to detect the mask of frames read thus far
-            self.maskDetector.detect(frame, net, ln, LABELS, COLORS, W, H)
+            self.maskDetector.detect(frame, W, H)
 
             return frame
 
@@ -144,11 +128,10 @@ class RealStream:
 
         # read image
         filepath = utils.get_file_path('webApp/uploads', filename)
-        print(filepath)
         image = cv2.imread(filepath)
 
         # process frame
-        frame = self.processFrame(image, None, None)
+        frame = self.processFrame(image)
 
         # generate processed image
         basename = os.path.splitext(filename)[0]
@@ -158,7 +141,6 @@ class RealStream:
         print("processed image was successfully saved")
 
         return outputfile
-
 
     # process uploaded image / video
     def processvideo(self, filename):
@@ -219,4 +201,4 @@ class RealStream:
         return outputfilename
 
 # release the video stream pointer
-#vs.stop() 
+#vs.stop()

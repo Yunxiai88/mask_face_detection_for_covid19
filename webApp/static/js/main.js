@@ -87,8 +87,7 @@
                 $("#processresultdiv").show();
             });
 
-            //pending
-
+            //show detected face
             $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){
                 if ($('.progress-bar-success').length>0 && $('.progress-bar-success')[0].outerText =="Done") {
                     var fileName = $('.file-footer-caption')[0].title
@@ -98,7 +97,6 @@
                     $("#uploadFile_processed").attr("src","/static/processed/"+processedFileName)
                     $("#processresultdiv").show();
                 }
-
               });
 
         }
