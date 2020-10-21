@@ -2,7 +2,7 @@ import os
 import cv2
 import csv
 import numpy as np
-
+from mtcnn.mtcnn import MTCNN
 from PIL import Image
 
 from sklearn.preprocessing import Normalizer
@@ -185,11 +185,11 @@ class FaceNet:
     # encode person and save into db
     def save_encode_db(self, label, filename):
         print("encoding was begining for: " + label)
-        imagePath = os.path.sep.join(["webApp/uploads", filename])
+        imagePath = utils.get_file_path("webApp/uploads", filename)
 
         try:
              # extract face using facenet
-            #face_frame = self.extract_face(imagePath)
+            # face_frame = self.extract_face(imagePath)
 
              # extract face using mtcnn
             face_frame = self.extract_mtcnn_face(imagePath)
@@ -198,7 +198,7 @@ class FaceNet:
             self.database[label] = self.get_embedding(face_frame)
 
             # write into db
-            dbPath = os.path.sep.join(["webApp/data", "dict.csv"])
+            dbPath = utils.get_file_path("webApp/data", "dict.csv")
             with open(dbPath, 'w', newline='') as csv_file:
                 writer = csv.writer(csv_file)
                 for key, value in self.database.items():
