@@ -3,51 +3,131 @@ html, body {
 }
 
 #faceShow {
-position:absolute;
-top: 50%;
-left: 50%;
-width:20em;
-height:18em;
-margin-top: -9em;
-margin-left: -15em;
+    top: 20%;
+    width: 50%;
+    margin:auto;
 }
 
 .navbar {
-margin-bottom: 0;
-border-radius: 0;
+   margin-bottom: 0;
+   border-radius: 0;
 }
 
 footer {
-background-color: #f2f2f2;
-margin-top: -50px;
-height: 50px;
-padding: 15px 0;
-width: 100%;
-position: relative;
-z-index: 9999;
-clear: both;
+    background-color: #021319!important;
+    margin-top: -50px;
+    height: 50px;
+    padding: 15px 0;
+    width: 100%;
+    position: relative;
+    z-index: 9999;
+    clear: both;
 }
 
 .content {
-padding-bottom: 50px;
+    padding-bottom: 50px;
+    min-height: 900px;
+    background-color: #021319;
 }
 
 .jumbotron {
-background-size: cover;
-background-size: 100% 100%;
-
-background-repeat: no-repeat;
+    background-size: cover;
+    background-size: 100% 100%;
+    
+    background-repeat: no-repeat;
 }
 
 .jumbotron-content {
-color: white;
+    color: white;
 }
 
 .image {
-position: relative;
-height: 190px;
-width: 160px;
-border-radius: 0px;
-margin-left: auto;
-margin-right: auto
+    position: relative;
+    height: 190px;
+    width: 160px;
+    border-radius: 0px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.jumbotron {
+    background-image: url(../img/background.jpg);
+}
+
+.bg-dark {
+    background-color: #021319!important;
+}
+
+.navbar-dark .navbar-brand {
+    color: #4AEFF0;
+    font-family: Russo none;
+}
+
+.footer-text{
+    color:white;
+}
+
+.titleFont{
+    color: #3FF8F8;
+}
+
+.navImg{
+    border-style: solid;
+}
+
+.description { 
+    width:inherit; /* width: 100px; */
+    white-space: pre-wrap;
+    color:  white;
+    margin-top:2em;
+}
+
+.img-thumbnail {
+    padding: .25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    max-width: 70%;
+    height: auto;
+}
+
+.cameraFrame {
+    width: 50em;
+    height: 30em;
+}
+
+#static_content{
+    background-color: white !important;
+}
+
+.static-box{
+    width: 50em;
+    margin-top: 3em;
+}
+
+#sidebar
+.sidenav {
+    width: 130px;
+    position: fixed;
+    z-index: 1;
+    top: 20px;
+    left: 10px;
+    background: #eee;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+  
+.sidenav a {
+    margin-top: 1em;
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #4AEFF0;
+    display: block;
+    border-style: solid;
+    max-width: 13em;
+}
+  
+.sidenav a:hover {
+    color: #064579;
 }

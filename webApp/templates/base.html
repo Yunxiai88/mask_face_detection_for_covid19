@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -15,6 +16,7 @@
     <script src="{{ url_for('static', filename='js/fileinput.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fileinput.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
 </head>
 
 <body>
@@ -32,12 +34,12 @@
                         <li class="nav-item">
                             <a href="/about" class="nav-link" href="/#">About</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="/#">Gallery</a>
                         </li>
                         <li class="nav-item">
                             <a href="/contact" class="nav-link" href="/#">Contact</a>
-                        </li>
+                        </li> -->
                     </ul>
                     <ul class="nav navbar-nav">
                         <li class="nav-right pull-sm-right align-content-end">
@@ -49,6 +51,8 @@
             </div>
         </nav>
     </div>
+   <!-- <h1>{{loading}}</h1>  -->
+    <div class="loading" style="display: None ;">Loading&#8230;</div>
 
     <!-- Content -->
     <div class="content">
@@ -61,10 +65,10 @@
 
     <div>
         <footer class="container-fluid text-center">
-            <p>Power by © 2020 NUS Practice Developer Group16 All Rights Reserved</p>
+            <p class="footer-text">© 2020 NUS ISS Term 2019-2020 Patatern Recognition System Group16 All Rights Reserved</p>
         </footer>
     </div>
 
 </body>
 
-</html> 
+</html>

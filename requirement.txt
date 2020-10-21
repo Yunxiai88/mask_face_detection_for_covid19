@@ -1,0 +1,6 @@
+
+opencv-contrib-python==4.4.0.44
+flask==1.1.2
+imutils==0.5.3
+tensorflow==2.3.0
+filetype==1.0.7
