@@ -27,7 +27,7 @@ def realStream():
     # start a thread that will perform mask detection
     rs = RealStream()
     t = threading.Thread(target=rs.mask_detection)
-    t.daemon = True
+    t.running = True
     t.start()
     # forward to real stream page
     return render_template("realStream.html")

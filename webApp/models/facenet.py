@@ -189,10 +189,10 @@ class FaceNet:
 
         try:
              # extract face using facenet
-            # face_frame = self.extract_face(imagePath)
+            face_frame = self.extract_face(imagePath)
 
              # extract face using mtcnn
-            face_frame = self.extract_mtcnn_face(imagePath)
+            # face_frame = self.extract_mtcnn_face(imagePath)
 
             # get enbedding code
             self.database[label] = self.get_embedding(face_frame)

@@ -126,6 +126,7 @@ margin-right: auto
     display: block;
     border-style: solid;
     max-width: 13em;
+    margin-left: 15px;
   }
   
   .sidenav a:hover {
