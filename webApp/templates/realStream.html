@@ -4,6 +4,7 @@
 {% block content %}
 
 <div id="faceShow">
-    <img src="{{ url_for('video_feed') }}" alt="Initializing Camera ...">
+    <img class="cameraFrame" src="{{ url_for('video_feed') }}" alt="Initializing Camera ...">
 </div>
+<div class="loading" style="display: None ;">Loading&#8230;</div>
 {% endblock %}
