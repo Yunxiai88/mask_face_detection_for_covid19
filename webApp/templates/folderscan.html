@@ -2,10 +2,15 @@
 
 {% block content %}
 
+<div class="sidenav">
+    <a href="/staticstream">Image Encoding</a>
+    <a href="/imageprocess">Image Processing</a>
+    <a href="/folderscan">Folder Scanning</a>
+  </div>
 
-<div class="d-flex" id="wrapper">
+<!-- <div class="d-flex" id="wrapper"> -->
     <!-- Sidebar -->
-    <div class="bg-light border-right">
+    <!-- <div class="bg-light border-right">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <li class="nav-item active">
@@ -27,13 +32,67 @@
                     <span>Folder Scan</span></a>
             </li>
         </ul>
-    </div>
+    </div> -->
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
-    <div class="container-fluid">
+    <div class="container-fluid static-box">
         <div id="page-content-wrapper">
-            <div id="content">
+            <div id="static_content">
+
+                <div class="container-fluid" id="main">
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- /#page-content-wrapper -->
+</div>
+
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="sidenav">
+    <a href="/staticstream">Image Encoding</a>
+    <a href="/imageprocess">Image Processing</a>
+    <a href="/folderscan">Folder Scanning</a>
+  </div>
+
+<!-- <div class="d-flex" id="wrapper"> -->
+    <!-- Sidebar -->
+    <!-- <div class="bg-light border-right">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="/staticstream">
+                    <span>Image Encoding</span></a>
+            </li>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/imageprocess">
+                    <span>Image Process</span></a>
+            </li>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/folderscan">
+                    <span>Folder Scan</span></a>
+            </li>
+        </ul>
+    </div> -->
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div class="container-fluid static-box">
+        <div id="page-content-wrapper">
+            <div id="static_content">
 
                 <div class="container-fluid" id="main">
 
