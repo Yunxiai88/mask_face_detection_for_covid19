@@ -3,8 +3,8 @@ yolov4/data/.DS_Store
 yolov4/python/__pycache__
 webApp/models/util/__pycache__
 webApp/models/__pycache__
-webApp/uploads/*
 webApp/data/dict.csv
+webApp/uploads/*
 webApp/static/processed/*
 yolo/data/training/*
 yolov4/data/yolov4.weights
