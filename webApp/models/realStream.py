@@ -38,12 +38,13 @@ class RealStream:
         (W, H) = (None, None)
 
         # loop over frames from the video stream
-        while True:
+        th = threading.currentThread()
+        while getattr(th, "running", True):
             # read the next frame from the video stream
             # frame = vs.read()
             (gotFrame,frame) = vs.read()
 
-            if gotFrame == False:
+            if frame is None:
                 break
 
             # initial width and height for frame
@@ -64,8 +65,6 @@ class RealStream:
             with lock:
                 outputFrame = frame.copy()
 
-            if getattr(threading.currentThread(), "running", False) == False:
-                break
         print("thread is stopped, stopping camera")
         # vs.stop()
         vs.release()
