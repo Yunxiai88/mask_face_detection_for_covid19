@@ -1,6 +1,13 @@
 import threading
 import argparse
 import filetype
+import base64
+import cv2
+
+import numpy as np
+from PIL import Image
+from io import BytesIO
+from datetime import datetime
 
 from flask import Flask, Response, make_response, send_file
 from flask import flash, request, redirect, jsonify
@@ -88,8 +95,8 @@ def contact():
     # forward to contact page
     return render_template("contact.html")
 
-@app.route("/register/")
-def register():
+@app.route("/imageCapture/")
+def imageCapture():
     # stop the detection thread
     global t
     try:
@@ -99,7 +106,20 @@ def register():
         print("realtime thread is not running")
 
     # forward to register page
-    return render_template("register.html")
+    return render_template("imageCapture.html")
+
+@app.route("/videoCapture/")
+def videoCapture():
+    # stop the detection thread
+    global t
+    try:
+        t.running = False
+        t.join()
+    except Exception:
+        print("realtime thread is not running")
+
+    # forward to register page
+    return render_template("videoCapture.html")
 
 #---------------------------------------------------------------------
 #----------------------------Functions--------------------------------
@@ -183,6 +203,34 @@ def uploadImage():
         # response.mimetype = 'text/plain'
         # response.headers['x-tag'] = 'sth.magic'
         return response
+
+
+@app.route('/uploadImageBase64', methods=['GET', 'POST'])
+def uploadImageBase64():
+    if request.method == 'POST':
+        username = request.form['username']
+        imagebase64 = request.form['imageBase64']
+
+        # convert base64 string to image
+        offset = imagebase64.index(',')+1
+        img_bytes = base64.b64decode(imagebase64[offset:])
+        img = Image.open(BytesIO(img_bytes))
+        img  = np.array(img)
+
+        # write to file first
+        filename = datetime.now().strftime("%Y%m%d-%H%M%S") + '.png'
+        cv2.imwrite(utils.get_file_path('webApp/uploads', filename), utils.toRGB(img))
+
+        # encoding and save into db
+        fn = FaceNet()
+        (status, message) = fn.save_encode_db(username, filename)
+
+        response = make_response({"message":message})
+        response.status_code = status
+        # response.mimetype = 'text/plain'
+        # response.headers['x-tag'] = 'sth.magic'
+        return response
+
 
 # execute function
 if __name__ == '__main__':

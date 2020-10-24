@@ -117,9 +117,8 @@ class FaceNet:
         return label
 
     # use MTCNN to detect faces and return face array
-
     def extract_mtcnn_face(self, filename, required_size=(160, 160)):
-        print("extracting face from image")
+        print("extracting face from image using MTCNN beginning")
         detector = MTCNN()
 
         image = Image.open(filename)
@@ -147,13 +146,16 @@ class FaceNet:
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), img)
 
+        print("extracting face from image using MTCNN end")
+
         face_array = np.asarray(image)
 
         return face_array
 
     # facenet to encode
-
     def extract_face(self, filename):
+        print("extracting face from image beginning")
+
         image = cv2.imread(filename)
         frame = image
 
