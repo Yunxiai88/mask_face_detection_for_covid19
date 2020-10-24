@@ -24,6 +24,9 @@ def save_file(file):
         return 1
     return 0
 
+def toRGB(image):
+    return cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
+
 
 def rotate_bound(image, angle):
     # grab the dimensions of the image and then determine the

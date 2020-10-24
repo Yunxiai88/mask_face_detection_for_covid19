@@ -6,7 +6,7 @@ import datetime
 import imutils
 
 from imutils.video import FPS
-# from models.webcamVideoStream import WebcamVideoStream
+from models.webcamVideoStream import WebcamVideoStream
 from models.detector import MaskDetector
 from models.util import utils
 
@@ -29,8 +29,7 @@ class RealStream:
         global vs, outputFrame, lock
 
         # initialize the video stream and allow the camera sensor to warmup
-        # vs = WebcamVideoStream(src=0).start()
-        vs = cv2.VideoCapture(0)
+        vs = WebcamVideoStream(src=0).start()
         fps = FPS().start()
         time.sleep(2.0)
 
@@ -41,8 +40,7 @@ class RealStream:
         th = threading.currentThread()
         while getattr(th, "running", True):
             # read the next frame from the video stream
-            # frame = vs.read()
-            (gotFrame,frame) = vs.read()
+            frame = vs.read()
 
             if frame is None:
                 break
@@ -66,9 +64,7 @@ class RealStream:
                 outputFrame = frame.copy()
 
         print("thread is stopped, stopping camera")
-        # vs.stop()
-        vs.release()
-        cv2.destroyAllWindows()
+        vs.stop()
 
     # plot the frame onto video
     def generate(self):
