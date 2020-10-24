@@ -40,7 +40,6 @@ def realStream():
         t.join()
     except Exception:
         print("realtime thread is not running")
-
     # forward to real stream page
     return render_template("realStream.html")
 
