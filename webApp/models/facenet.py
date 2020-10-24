@@ -2,7 +2,7 @@ import os
 import cv2
 import csv
 import numpy as np
-
+from mtcnn.mtcnn import MTCNN
 from PIL import Image
 
 from sklearn.preprocessing import Normalizer
@@ -117,9 +117,8 @@ class FaceNet:
         return label
 
     # use MTCNN to detect faces and return face array
-
     def extract_mtcnn_face(self, filename, required_size=(160, 160)):
-        print("extracting face from image")
+        print("extracting face from image using MTCNN beginning")
         detector = MTCNN()
 
         image = Image.open(filename)
@@ -142,17 +141,21 @@ class FaceNet:
 
         # save detected face image to allow user download
         basename = os.path.splitext(os.path.basename(filename))[0]
-        outputfile = basename+"_face.jpg"
+        extention = os.path.splitext(os.path.basename(filename))[1]
+        outputfile = basename+"_face"+extention
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), img)
+
+        print("extracting face from image using MTCNN end")
 
         face_array = np.asarray(image)
 
         return face_array
 
     # facenet to encode
-
     def extract_face(self, filename):
+        print("extracting face from image beginning")
+
         image = cv2.imread(filename)
         frame = image
 
@@ -189,7 +192,7 @@ class FaceNet:
 
         try:
              # extract face using facenet
-            #face_frame = self.extract_face(imagePath)
+            # face_frame = self.extract_face(imagePath)
 
              # extract face using mtcnn
             face_frame = self.extract_mtcnn_face(imagePath)

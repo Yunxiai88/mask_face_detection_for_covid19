@@ -9,9 +9,27 @@
 <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div class="sidenav">
-        <a href="/staticstream">Image Encoding</a>
-        <a href="/imageprocess">Image Processing</a>
-        <a href="/capture">Real Capture</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Face Encoding
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/staticstream">Static Image Encoding</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/imageCapture">Capture Image Encoding</a>
+            </div>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Media Processing
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/imageprocess">Static Media Processing</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/videoCapture">Capture Video Processing</a>
+            </div>
+        </li>
     </div>
 
     <!-- /#sidebar-wrapper -->
@@ -33,12 +51,6 @@
                         <button type="button" id="recording" class="btn btn-primary">
                             <i class="fa fa-ban"></i> Start Recording
                         </button>
-                        <button type="button" id="capture" class="btn btn-primary">
-                            <i class="fa fa-ban"></i> Capture
-                        </button>
-                        <button type="button" id="send" class="btn btn-primary">
-                            <i class="fa fa-upload"></i> Send
-                        </button>
                     </section>
                 </article>
             </div>
@@ -51,28 +63,22 @@
 
     var openBtn = document.getElementById("openCamera");
     var startBtn = document.getElementById("recording");
-    var captureBtn = document.getElementById("capture");
-    var sendBtn = document.getElementById("send");
 
-    openBtn.onclick = function() {
-        this.disabled = true;
-        startBtn.disabled = false;
+    $('#openCamera').on('click', function() {
+        $(this).prop('disabled', true);
+        $('#recording').prop('disabled', false);
         m.init();
-    };
+    });;
 
-    startBtn.onclick = function() {
+    $('#recording').on('click', function() {
         if(m.recorderState==false) {
             m.startRecorder();
+            $('#recording').text("Stop Recording");
         } else if(m.recorderState==true) {
             m.stopRecorder();
+            $('#recording').text("Start Recording");
+            $('#openCamera').prop('disabled', false);
         }
-    };
-
-    captureBtn.onclick = function() {
-        var src = m.screenshot();
-        var img = document.createElement("img");
-        img.src=src;
-        document.getElementsByTagName("body")[0].appendChild(img);
-    };
+    });
 </script>
 {% endblock %}

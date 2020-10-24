@@ -1886,7 +1886,7 @@
                     uploadIcon: '<i class="fa fa-upload"></i>',
                     uploadClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
                     uploadTitle: 'Upload file',
-                    uploadRetryIcon: '<i class="fa fa-redo"></i>',
+                    uploadRetryIcon: '<i class="fa fa-repeat"></i>',
                     uploadRetryTitle: 'Retry upload',
                     downloadIcon: '<i class="fa fa-download"></i>',
                     downloadClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',

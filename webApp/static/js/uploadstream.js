@@ -311,6 +311,15 @@ var media = function(obj) {
 		}
 	}
 
+	this.uploadImageFile = function(image) {
+		var formData = new FormData();
+		formData.append("imageBase64", image);
+		formData.append("username", "tian");
+		ajax("formData", '/uploadImageBase64', formData, function() {
+			alert("upload successful.");
+		},'text');
+	}
+
 	//capture,return url
 	this.screenshot=function(){
 		var canvas=document.createElement("canvas");
@@ -336,6 +345,13 @@ var media = function(obj) {
 				this.mediaRecorder.stop();
 				MediaUtils.closeStream(this.mediaStream);
 			}, 2000);
+		}
+	}
+
+	//close camera
+	this.closeMedia = function() {
+		if(this.mediaStream != undefined & this.mediaStream != null) {
+			MediaUtils.closeStream(this.mediaStream);
 		}
 	}
 }

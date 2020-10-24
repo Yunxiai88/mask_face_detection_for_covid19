@@ -27,8 +27,9 @@
                 dropZoneTitle: 'Drag file here！',
             });
 
-            // image encoding upload button
+            // Face Encoding upload button
             $(".btn-upload-3").on("click", function() {
+                $("#processresultdiv").hide();
                 var username = $("#username").val();
                 if(!username) {
                     alert('Please Enter Name.');
@@ -42,7 +43,7 @@
                 $("#uploadImage").fileinput('upload');
             });
 
-            // image encoding clear button
+            // Face Encoding clear button
             $(".btn-reset-3").on("click", function() {
                 $("#username").val('');
                 $("#uploadImage").fileinput('clear');
@@ -72,6 +73,7 @@
 
             // image process upload button
             $(".btn-uploadfile-3").on("click", function() {
+                $("#processresultdiv").hide();
                 $("#uploadFile").fileinput('upload');
             });
 
@@ -98,6 +100,28 @@
                     $("#processresultdiv").show();
                 }
               });
+
+            //show proceesed image
+          $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){
+              debugger
+            if ($('.progress-bar-success').length>0 && $('.progress-bar-success')[0].outerText =="Done") {
+                var fileName = $('.file-footer-caption')[0].title
+                var arr = fileName.split('.')
+                arr[0]=arr[0]+"_processed"
+                var processedFileName = arr.join('.')
+                if (['JPG', 'PNG'].indexOf(arr[1].toUpperCase())>=0){
+                    $("#uploadImg_processed").attr("src","/static/processed/"+processedFileName)
+                    $("#uploadVid_processed").hide()
+                }
+
+                else if (['MP4', 'MOV'].indexOf(arr[1].toUpperCase())>=0){
+                    $("#uploadVid_processed").attr("src","/static/processed/"+processedFileName)
+                    $("#uploadImg_processed").hide()
+                }
+
+                $("#processresultdiv").show();
+            }
+          });
 
         }
     }
