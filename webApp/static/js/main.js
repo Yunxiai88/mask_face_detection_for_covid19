@@ -111,12 +111,10 @@
                 var processedFileName = arr.join('.')
                 if (['JPG', 'PNG'].indexOf(arr[1].toUpperCase())>=0){
                     $("#uploadImg_processed").attr("src","/static/processed/"+processedFileName)
-                    $("#uploadVid_processed").hide()
+                    $("#processed_img_wrapper").attr("style","")
                 }
-
-                else if (['MP4', 'MOV'].indexOf(arr[1].toUpperCase())>=0){
-                    $("#uploadVid_processed").attr("src","/static/processed/"+processedFileName)
-                    $("#uploadImg_processed").hide()
+                else {
+                    $("#processed_img_wrapper").attr("style","display:none;")
                 }
 
                 $("#processresultdiv").show();

@@ -302,7 +302,8 @@ class FaceNet:
 
         # save detected face image to allow user download
         basename = os.path.splitext(os.path.basename(filename))[0]
-        outputfile = basename+"_face.jpg"
+        extension = os.path.splitext(os.path.basename(filename))[1]
+        outputfile = basename+"_face"+extension
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), img)
 
