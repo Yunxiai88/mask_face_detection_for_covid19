@@ -62,11 +62,171 @@ class FaceNet:
 
         return loss
 
+    def samegroup(self, eye1,eye2):
+        dx = min(eye1[0]+eye1[2], eye2[0]+eye1[2]) - max(eye1[0], eye2[0])
+        dy = min(eye1[1]+eye1[3], eye2[1]+eye1[3]) - max(eye1[1], eye2[1])
+        if (dx>=0) and (dy>=0) and (dx*dy>0.5):
+                return True
+        return False
+
+    def get_eyes(self, roi_gray):
+
+        haarcascade_lefteye_2splitsPath = utils.get_file_path("webApp/data", "haarcascade_lefteye_2splits.xml")
+        haarcascade_righteye_2splitsPath = utils.get_file_path("webApp/data", "haarcascade_righteye_2splits.xml")
+        haarcascade_eye_tree_eyeglassesPath = utils.get_file_path("webApp/data", "haarcascade_eye_tree_eyeglasses.xml")
+        
+        haarcascade_lefteye_2splits=cv2.CascadeClassifier(haarcascade_lefteye_2splitsPath)
+        haarcascade_righteye_2splits=cv2.CascadeClassifier(haarcascade_righteye_2splitsPath)
+        haarcascade_eye_tree_eyeglasses=cv2.CascadeClassifier(haarcascade_eye_tree_eyeglassesPath)
+        
+        # Creating variable eyes
+        haarcascade_lefteye_2splits1 = haarcascade_lefteye_2splits.detectMultiScale(roi_gray, 1.1, 3)
+        haarcascade_righteye_2splits1 = haarcascade_righteye_2splits.detectMultiScale(roi_gray, 1.1, 3)
+        eyeglasses1 = haarcascade_eye_tree_eyeglasses.detectMultiScale(roi_gray, 1.1, 3)
+
+        eye_group = []
+        group = 0
+        for (ex , ey,   ew, eh) in haarcascade_lefteye_2splits1:
+            eye_group.append([ex , ey,  ew, eh, group])
+            group += 1
+            #cv2.rectangle(lefteyexml,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+        for (ex , ey,   ew, eh) in haarcascade_righteye_2splits1:
+            grouped = False
+            for g in eye_group:
+                if self.samegroup([ex , ey,  ew, eh],g):
+                    eye_group.append([ex , ey,  ew, eh, g[4]])
+                    grouped = True
+                    break
+            if grouped == False:
+                eye_group.append([ex , ey,  ew, eh, group])
+                group +=1
+        for (ex , ey,   ew, eh) in eyeglasses1:
+            grouped = False
+            for g in eye_group:
+                if self.samegroup([ex , ey,  ew, eh],g):
+                    eye_group.append([ex , ey,  ew, eh, g[4]])
+                    grouped = True
+                    break
+            if grouped == False:
+                eye_group.append([ex , ey,  ew, eh, group])
+                group +=1
+            #cv2.rectangle(eyeglassesxml,(ex,ey),(ex+ew,ey+eh),(255,255,255),2)
+        #print("total groups : "+str(group))
+        eyes = []
+        for i in range(group):
+            ecount = 0
+            ex = 0
+            ey = 0
+            ew = 0
+            eh = 0
+            for e in eye_group:
+                if e[4] == i:
+                    ex += e[0]
+                    ey += e[1]
+                    ew += e[2]
+                    eh += e[3]
+                    ecount+=1
+            if ecount > 1:
+                ex = int(ex/ecount)
+                ey = int(ey/ecount)
+                ew = int(ew/ecount)
+                eh = int(eh/ecount)
+            #print("Group : "+str(i))
+            #print("position : {},{},{},{}",ex,ey,ew,eh)
+            if len(eyes) <2 :
+                if len(eyes) == 1:
+                    tmp = eyes[0]
+                    if eyes[0][2]*eyes[0][3] < ew*eh:
+                        eyes[0] = [ex,ey,ew,eh]
+                        eyes.append(tmp)
+                    else:
+                        eyes.append([ex,ey,ew,eh])
+                else:
+                    eyes.append([ex,ey,ew,eh])
+                #print(len(eyes))
+            else:
+                if eyes[0][2]*eyes[0][3] < ew*eh:
+                    tmp = eyes[0]
+                    eyes[0] = [ex,ey,ew,eh]
+                    eyes[1] = tmp
+                elif eyes[1][2]*eyes[1][3] < ew*eh:
+                    eyes[1] = [ex,ey,ew,eh]
+        return eyes
+
+
+
+    def rotate_img(self, img):
+        img_original = img  
+        gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)        
+        try:
+            #img = cv2.imread(img_path)
+            # Converting the image into grayscale
+            roi_gray=gray
+            roi_color=img
+            
+            eyes = self.get_eyes(roi_gray)       
+
+            if len(eyes) ==2:
+                # Creating for loop in order to divide one eye from another
+                eye_1 = eyes[0]
+                eye_2 = eyes[1]
+                
+                if eye_1[0] < eye_2[0]:
+                        left_eye = eye_1
+                        right_eye = eye_2
+                else:
+                        left_eye = eye_2
+                        right_eye = eye_1
+                # Calculating coordinates of a central points of the rectangles
+                left_eye_center = (int(left_eye[0] + (left_eye[2] / 2)), int(left_eye[1] + (left_eye[3] / 2)))
+                left_eye_x = left_eye_center[0] 
+                left_eye_y = left_eye_center[1]
+                    
+                right_eye_center = (int(right_eye[0] + (right_eye[2]/2)), int(right_eye[1] + (right_eye[3]/2)))
+                right_eye_x = right_eye_center[0]
+                right_eye_y = right_eye_center[1]
+
+                if left_eye_y > right_eye_y:
+                        A = (right_eye_x, left_eye_y)
+                        # Integer -1 indicates that the image will rotate in the clockwise direction
+                        direction = -1 
+                else:
+                        A = (left_eye_x, right_eye_y)
+                    # Integer 1 indicates that image will rotate in the counter clockwise   
+                    # direction
+                        direction = 1 
+
+                delta_x = right_eye_x - left_eye_x
+                delta_y = right_eye_y - left_eye_y
+                angle=np.arctan(delta_y/delta_x)
+                angle = (angle * 180) / np.pi
+
+                # Width and height of the image
+                h, w = img.shape[:2]
+                # Calculating a center point of the image
+                # Integer division "//"" ensures that we receive whole numbers
+                center = (w // 2, h // 2)
+                # Defining a matrix M and calling
+                # cv2.getRotationMatrix2D method
+                M = cv2.getRotationMatrix2D(center, (angle), 1.0)
+                # Applying the rotation to our image using the
+                # cv2.warpAffine method
+                rotated = cv2.warpAffine(img_original, M, (w, h))
+
+                rotated = cv2.resize(rotated,(160,160),interpolation=cv2.INTER_CUBIC)
+                rotated = cv2.cvtColor(rotated,cv2.COLOR_BGR2GRAY)
+                rotated = cv2.cvtColor(rotated,cv2.COLOR_GRAY2RGB)
+                return rotated
+        except:
+            gray = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
+        return gray
+        
     # get face embedding and perform face recognition
     def get_embedding(self, image):
         #print("get enbedding code function begin...")
+        face = self.rotate_img(image)
         # scale pixel values
-        face = image.astype('float32')
+        face = face.astype('float32')
         # standardization
         mean, std = face.mean(), face.std()
         face = (face - mean) / std
@@ -192,10 +352,10 @@ class FaceNet:
 
         try:
              # extract face using facenet
-            # face_frame = self.extract_face(imagePath)
+            face_frame = self.extract_face(imagePath)
 
              # extract face using mtcnn
-            face_frame = self.extract_mtcnn_face(imagePath)
+            # face_frame = self.extract_mtcnn_face(imagePath)
 
             # get enbedding code
             self.database[label] = self.get_embedding(face_frame)

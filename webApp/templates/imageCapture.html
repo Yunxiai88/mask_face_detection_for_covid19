@@ -9,27 +9,36 @@
 <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div class="sidenav">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li >
+            <a href="#navbarDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >
                 Face Encoding
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/staticstream">Static Image Encoding</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/imageCapture">Capture Image Encoding</a>
-            </div>
+            <ul class="collapse list-unstyled" id="navbarDropdown">
+                <li >
+                    <a href="/staticstream">Static Image Encoding</a>
+                </li>
+                <li>
+                    <a href="/imageCapture"> Capture Image Encoding</a>
+                </li>
+            </ul>
+
         </li>
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li >
+            <a href="#navbarDropdown2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >
                 Media Processing
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/imageprocess">Static Media Processing</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/videoCapture">Capture Video Processing</a>
-            </div>
+            <ul class="collapse list-unstyled" id="navbarDropdown2">
+                <li>
+                    <a href="/imageprocess">Static Media Processing</a>
+                </li>
+                <li>
+                    <a href="/videoCapture"> Capture Video Processing</a>
+                </li>
+            </ul>
+
         </li>
+
     </div>
 
     <!-- /#sidebar-wrapper -->
@@ -37,6 +46,7 @@
      <!-- Page Content -->
     <div class="container-fluid static-box">
         <div id="page-content-wrapper">
+            <h1 class="titleFont">Capture Image Encoding</h1>
             <div id="static_content">
                 <article style="border:1px solid white;width:500px;height:500px;margin:0 auto;background-color:white;">
                     <section style="width:320px; height:240px;border:1px solid green; margin:50px auto;">
@@ -56,6 +66,19 @@
                             <i class="fa fa-upload"></i> Send
                         </button>
                     </section>
+
+                    <section style="text-align:center;border:none; margin-top:20px;">
+                        <div id="processresultdiv" >
+                            <hr>
+                            <div class="form-group row">
+                                <div class="col col-md-3"><label style="font-size:12px;"><span>Detected Face</span></label></div>
+                                <div class="col col-md-3">
+                                    <img id="uploadFile_processed" width="70px"/>
+                                </div>
+                                <div class="col col-md-6 text-success">Face detected and encoded successfully, please proceed to <strong>Real Stream</strong> or <strong>Media Processing</strong> portion to test the model.</div>
+                            </div>
+                        </div>
+                    </section>
                 </article>
             </div>
         </div>
@@ -69,7 +92,7 @@
         $('#video').show();
         $('#captureImg').hide();
         m.init();
-    });;
+    });
 
     $('#capture').on('click', function() {
         var src = m.screenshot();
@@ -82,7 +105,8 @@
 
     $('#send').on('click', function() {
         var image = $("#captureImg").attr('src');
-        m.uploadImageFile(image);
+        username = prompt("pls enter a value:");
+        m.uploadImageFile(image, username);
     });
 
 </script>

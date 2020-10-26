@@ -257,7 +257,7 @@ var media = function(obj) {
 		this.video = u.ele(obj["video"]);
 		if(this.video != null) {
 			this.recorderState = false;
-			MediaUtils.getUserMedia(true, true, (err, stream) => {
+			MediaUtils.getUserMedia(true, false, (err, stream) => {
 				if(err) {
 					throw err;
 				} else {
@@ -292,7 +292,7 @@ var media = function(obj) {
 		var url = this.uploadURI;
 		if(url != undefined & url != null & url != "") {
 			if(confirm("record success,do you want to upload？")) {
-				alert("uploading！");
+				$('.loading').show();
 				var formData = new FormData();
 				formData.append("uploadFile", file);
 				var params = this.uploadParams;
@@ -301,8 +301,13 @@ var media = function(obj) {
 						formData.append(param, params[params]);
 					}
 				}
-				ajax("formData", url, formData, function(){
-					alert("upload successful.");
+				ajax("formData", url, formData, function(response) {
+					$('.loading').hide();
+					console.log(response);
+
+                    var processedFileName = JSON.parse(response).filename;
+					$("#downloadbtn").attr("href","/download/"+processedFileName)
+                    $("#processresultdiv").show();
 				},'text');
 				this.mediaRecorder = null;
 				this.mediaStream = null;
@@ -311,12 +316,18 @@ var media = function(obj) {
 		}
 	}
 
-	this.uploadImageFile = function(image) {
+	this.uploadImageFile = function(image, username) {
 		var formData = new FormData();
 		formData.append("imageBase64", image);
-		formData.append("username", "tian");
-		ajax("formData", '/uploadImageBase64', formData, function() {
-			alert("upload successful.");
+		formData.append("username", username);
+		$('.loading').show();
+		ajax("formData", '/uploadImageBase64', formData, function(response) {
+			$('.loading').hide();
+            console.log(response)
+
+            var processedFileName = JSON.parse(response).filename;
+			$("#uploadFile_processed").attr("src","/static/processed/"+processedFileName)
+			$("#processresultdiv").show();
 		},'text');
 	}
 

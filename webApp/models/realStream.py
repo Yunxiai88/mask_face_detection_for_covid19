@@ -63,8 +63,6 @@ class RealStream:
             with lock:
                 outputFrame = frame.copy()
 
-            if frame is None:
-                break
         print("thread is stopped, stopping camera")
         vs.stop()
 

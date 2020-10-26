@@ -99,7 +99,7 @@
                     $("#uploadFile_processed").attr("src","/static/processed/"+processedFileName)
                     $("#processresultdiv").show();
                 }
-              });
+            });
 
             //show proceesed image
           $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){

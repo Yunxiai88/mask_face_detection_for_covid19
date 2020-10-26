@@ -1,3 +1,4 @@
+import os
 import threading
 import argparse
 import filetype
@@ -40,7 +41,6 @@ def realStream():
         t.join()
     except Exception:
         print("realtime thread is not running")
-
     # forward to real stream page
     return render_template("realStream.html")
 
@@ -226,10 +226,13 @@ def uploadImageBase64():
         fn = FaceNet()
         (status, message) = fn.save_encode_db(username, filename)
 
-        response = make_response({"message":message})
+        # processed file name
+        basename = os.path.splitext(os.path.basename(filename))[0]
+        extention = os.path.splitext(os.path.basename(filename))[1]
+        processedFile = basename+"_face"+extention
+
+        response = make_response(jsonify({"message":message, "filename": processedFile}))
         response.status_code = status
-        # response.mimetype = 'text/plain'
-        # response.headers['x-tag'] = 'sth.magic'
         return response
 
 
