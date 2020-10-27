@@ -74,11 +74,11 @@ class FaceNet:
         haarcascade_lefteye_2splitsPath = utils.get_file_path("webApp/data", "haarcascade_lefteye_2splits.xml")
         haarcascade_righteye_2splitsPath = utils.get_file_path("webApp/data", "haarcascade_righteye_2splits.xml")
         haarcascade_eye_tree_eyeglassesPath = utils.get_file_path("webApp/data", "haarcascade_eye_tree_eyeglasses.xml")
-        
+
         haarcascade_lefteye_2splits=cv2.CascadeClassifier(haarcascade_lefteye_2splitsPath)
         haarcascade_righteye_2splits=cv2.CascadeClassifier(haarcascade_righteye_2splitsPath)
         haarcascade_eye_tree_eyeglasses=cv2.CascadeClassifier(haarcascade_eye_tree_eyeglassesPath)
-        
+
         # Creating variable eyes
         haarcascade_lefteye_2splits1 = haarcascade_lefteye_2splits.detectMultiScale(roi_gray, 1.1, 3)
         haarcascade_righteye_2splits1 = haarcascade_righteye_2splits.detectMultiScale(roi_gray, 1.1, 3)
@@ -156,21 +156,21 @@ class FaceNet:
 
 
     def rotate_img(self, img):
-        img_original = img  
-        gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)        
+        img_original = img
+        gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         try:
             #img = cv2.imread(img_path)
             # Converting the image into grayscale
             roi_gray=gray
             roi_color=img
-            
-            eyes = self.get_eyes(roi_gray)       
+
+            eyes = self.get_eyes(roi_gray)
 
             if len(eyes) ==2:
                 # Creating for loop in order to divide one eye from another
                 eye_1 = eyes[0]
                 eye_2 = eyes[1]
-                
+
                 if eye_1[0] < eye_2[0]:
                         left_eye = eye_1
                         right_eye = eye_2
@@ -179,9 +179,9 @@ class FaceNet:
                         right_eye = eye_1
                 # Calculating coordinates of a central points of the rectangles
                 left_eye_center = (int(left_eye[0] + (left_eye[2] / 2)), int(left_eye[1] + (left_eye[3] / 2)))
-                left_eye_x = left_eye_center[0] 
+                left_eye_x = left_eye_center[0]
                 left_eye_y = left_eye_center[1]
-                    
+
                 right_eye_center = (int(right_eye[0] + (right_eye[2]/2)), int(right_eye[1] + (right_eye[3]/2)))
                 right_eye_x = right_eye_center[0]
                 right_eye_y = right_eye_center[1]
@@ -189,12 +189,12 @@ class FaceNet:
                 if left_eye_y > right_eye_y:
                         A = (right_eye_x, left_eye_y)
                         # Integer -1 indicates that the image will rotate in the clockwise direction
-                        direction = -1 
+                        direction = -1
                 else:
                         A = (left_eye_x, right_eye_y)
-                    # Integer 1 indicates that image will rotate in the counter clockwise   
+                    # Integer 1 indicates that image will rotate in the counter clockwise
                     # direction
-                        direction = 1 
+                        direction = 1
 
                 delta_x = right_eye_x - left_eye_x
                 delta_y = right_eye_y - left_eye_y
@@ -217,10 +217,12 @@ class FaceNet:
                 rotated = cv2.cvtColor(rotated,cv2.COLOR_BGR2GRAY)
                 rotated = cv2.cvtColor(rotated,cv2.COLOR_GRAY2RGB)
                 return rotated
+            else:
+                gray = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
         except:
             gray = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
         return gray
-        
+
     # get face embedding and perform face recognition
     def get_embedding(self, image):
         #print("get enbedding code function begin...")
@@ -301,12 +303,10 @@ class FaceNet:
 
         # save detected face image to allow user download
         basename = os.path.splitext(os.path.basename(filename))[0]
-        extention = os.path.splitext(os.path.basename(filename))[1]
-        outputfile = basename+"_face"+extention
+        extension = os.path.splitext(os.path.basename(filename))[1]
+        outputfile = basename+"_face"+extension
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         cv2.imwrite(utils.get_file_path('webApp/static/processed', outputfile), img)
-
-        print("extracting face from image using MTCNN end")
 
         face_array = np.asarray(image)
 
@@ -351,10 +351,10 @@ class FaceNet:
         imagePath = utils.get_file_path("webApp/uploads", filename)
 
         try:
-             # extract face using facenet
+            # extract face using facenet
             face_frame = self.extract_face(imagePath)
 
-             # extract face using mtcnn
+            # extract face using mtcnn
             # face_frame = self.extract_mtcnn_face(imagePath)
 
             # get enbedding code

@@ -92,7 +92,9 @@
             //show detected face
             $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){
                 if ($('.progress-bar-success').length>0 && $('.progress-bar-success')[0].outerText =="Done") {
-                    var fileName = $('.file-footer-caption')[0].title
+                    var uploadfiles = $('.file-footer-caption');
+                    var fileName = $('.file-footer-caption')[uploadfiles.length - 1].title
+
                     var arr = fileName.split('.')
                     arr[0]=arr[0]+"_face"
                     var processedFileName = arr.join('.')
@@ -105,18 +107,18 @@
           $('body').on('DOMSubtreeModified', '.progress-bar-success', function(data){
               debugger
             if ($('.progress-bar-success').length>0 && $('.progress-bar-success')[0].outerText =="Done") {
-                var fileName = $('.file-footer-caption')[0].title
+                var uploadfiles = $('.file-footer-caption');
+                var fileName = $('.file-footer-caption')[uploadfiles.length - 1].title
+
                 var arr = fileName.split('.')
                 arr[0]=arr[0]+"_processed"
                 var processedFileName = arr.join('.')
                 if (['JPG', 'PNG'].indexOf(arr[1].toUpperCase())>=0){
                     $("#uploadImg_processed").attr("src","/static/processed/"+processedFileName)
-                    $("#uploadVid_processed").hide()
+                    $("#processed_img_wrapper").attr("style","")
                 }
-
-                else if (['MP4', 'MOV'].indexOf(arr[1].toUpperCase())>=0){
-                    $("#uploadVid_processed").attr("src","/static/processed/"+processedFileName)
-                    $("#uploadImg_processed").hide()
+                else {
+                    $("#processed_img_wrapper").attr("style","display:none;")
                 }
 
                 $("#processresultdiv").show();
