@@ -31,7 +31,7 @@
       * change configuration
       * Prepare the trainning data and put them in
       * run this command to train data
-      * pending
+      * refer to yolov4_training.ipynb for more details on traning YOLOv4.
 
 2. **Training FaceNet**
      * If you want to directly use a pre-trained model for facial recognition, just skip this step.
@@ -52,6 +52,8 @@
        ```
      
        The trained model will also be in the /models/facenet.
+       
+       refer to Facenet_test.ipynb for more details on traning facenet.
 
 
 ## System Integration
