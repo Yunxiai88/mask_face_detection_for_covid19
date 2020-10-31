@@ -7,3 +7,4 @@ filetype==1.0.7
 pillow==7.2.0
 Keras==2.4.3
 scikit-learn==0.23.2
+mtcnn==0.1.0

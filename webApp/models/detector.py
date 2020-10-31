@@ -122,4 +122,4 @@ class MaskDetector:
                 color = [int(c) for c in self.COLORS[classIDs[i]]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
                 text = "{}:{:.4f}".format(self.LABELS[classIDs[i]]+":"+names[i], confidences[i])
-                cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1.5, color, 8)
+                cv2.putText(frame, text, (x, y + h - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 4)
