@@ -53,7 +53,7 @@
      
        The trained model will also be in the /models/facenet.
        
-       refer to ```facenet_test.ipynb``` for more details on traning facenet.
+     * refer to ```facenet_test.ipynb``` for more details on traning facenet.
 
 
 ## System Integration
